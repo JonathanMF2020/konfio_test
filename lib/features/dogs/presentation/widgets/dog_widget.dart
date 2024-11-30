@@ -40,8 +40,6 @@ class _DogWidgetState extends State<DogWidget>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final orientation = MediaQuery.of(context).orientation;
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -49,94 +47,150 @@ class _DogWidgetState extends State<DogWidget>
           opacity: _animation,
           child: SizeTransition(
             sizeFactor: _animation,
-            child: buildContent(screenWidth, orientation, context),
+            child: buildContent(context),
           ),
         );
       },
     );
   }
 
-  Column buildContent(
-      double screenWidth, Orientation orientation, BuildContext context) {
-    return Column(
-      children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: (screenWidth * 0.5) + 30),
-          child: Stack(
-            children: [
-              buildData(orientation, context),
-              buildImage(screenWidth),
-            ],
+  Container buildContent(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 19),
+      child: Column(
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: 200,
+              minWidth: MediaQuery.of(context).size.width,
+            ),
+            child: Row(
+              children: [
+                buildImage(),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Expanded(
+                    child: ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(maxHeight: 160, minHeight: 160),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 2),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(
+                                10), // Esquina superior derecha redondeada
+                            bottomRight: Radius.circular(
+                                10), // Esquina inferior derecha redondeada
+                          ),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black26, blurRadius: 10),
+                          ],
+                        ),
+                        child: Container(
+                            padding: const EdgeInsets.only(bottom: 20, top: 20),
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                    margin: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      widget.dog!.dogName!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    )),
+                                Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  child: Text(
+                                    widget.dog!.description!,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Container(
+                                    margin: const EdgeInsets.only(top: 16),
+                                    child: Text(
+                                      "Almost ${widget.dog!.age!} years",
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    )),
+                              ],
+                            )),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Positioned buildImage(double screenWidth) {
-    return Positioned(
-      left: 0,
-      bottom: 10.0,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10)],
-        ),
-        margin: const EdgeInsets.only(bottom: 20),
-        child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(10), // Radio de las esquinas redondeadas
-
-          child: CachedNetworkImage(
-            width: screenWidth * 0.3,
-            height: screenWidth * 0.5,
-            fit: BoxFit.cover,
-            imageUrl: widget.dog!.image ?? '',
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
+  Container buildImage() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(1),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: CachedNetworkImage(
+          imageUrl: widget.dog!.image ?? '',
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
     );
   }
 
-  Positioned buildData(Orientation orientation, BuildContext context) {
-    return Positioned(
-      left: orientation == Orientation.portrait ? 105.0 : 225,
-      top: orientation == Orientation.portrait ? 30 : 70,
-      right: 0,
+  Expanded buildData(
+      Orientation orientation, BuildContext context, double screenWidt) {
+    return Expanded(
       child: Card(
         color: Colors.white,
         child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  widget.dog!.dogName!,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: orientation == Orientation.portrait ? 90 : 200,
-                    minHeight: orientation == Orientation.portrait ? 74 : 120),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    widget.dog!.description!,
-                    textAlign: TextAlign.justify,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      widget.dog!.dogName!,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
-                ),
-              ),
-              Text(
-                "Almost ${widget.dog!.age!} years",
-                style: Theme.of(context).textTheme.bodySmall,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxHeight:
+                            orientation == Orientation.portrait ? 90 : 200,
+                        minHeight:
+                            orientation == Orientation.portrait ? 74 : 120),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        widget.dog!.description!,
+                        textAlign: TextAlign.justify,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Almost ${widget.dog!.age!} years",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
               ),
             ],
           ),

@@ -24,11 +24,11 @@ TextTheme textTheme() {
           bodyLarge: TextStyle(color: AppColors.primary, fontSize: 14),
           bodyMedium: TextStyle(
             color: AppColors.primary,
-            fontSize: 14,
+            fontSize: 12,
           ),
           bodySmall: TextStyle(
               color: AppColors.primary,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: AppColors.primary, fontSize: 20))
       .apply(
