@@ -22,14 +22,12 @@ class _DogWidgetState extends State<DogWidget>
   @override
   void initState() {
     super.initState();
-    // Initialize AnimationController with a vsync
     _controller = AnimationController(
       duration: const Duration(milliseconds: 500),
-      vsync:
-          this, // 'this' refers to the State object which is a TickerProvider
+      vsync: this,
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    _controller.forward(); // Start the animation
+    _controller.forward();
   }
 
   @override
@@ -67,70 +65,67 @@ class _DogWidgetState extends State<DogWidget>
             child: Row(
               children: [
                 buildImage(),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Expanded(
-                    child: ConstrainedBox(
-                      constraints:
-                          const BoxConstraints(maxHeight: 160, minHeight: 160),
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(
-                                10), // Esquina superior derecha redondeada
-                            bottomRight: Radius.circular(
-                                10), // Esquina inferior derecha redondeada
-                          ),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10),
-                          ],
-                        ),
-                        child: Container(
-                            padding: const EdgeInsets.only(bottom: 20, top: 20),
-                            margin: const EdgeInsets.only(left: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                    margin: const EdgeInsets.only(bottom: 16),
-                                    child: Text(
-                                      widget.dog!.dogName!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    )),
-                                Container(
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: Text(
-                                    widget.dog!.description!,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.justify,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Container(
-                                    margin: const EdgeInsets.only(top: 16),
-                                    child: Text(
-                                      "Almost ${widget.dog!.age!} years",
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    )),
-                              ],
-                            )),
-                      ),
-                    ),
-                  ),
-                ),
+                buildText(context),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Positioned buildText(BuildContext context) {
+    return Positioned(
+      right: 0,
+      top: 0,
+      child: Expanded(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 177, minHeight: 177),
+          child: Container(
+            margin: const EdgeInsets.only(right: 2),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+              boxShadow: [
+                BoxShadow(color: Colors.black26, blurRadius: 10),
+              ],
+            ),
+            child: Container(
+                padding: const EdgeInsets.only(bottom: 20, top: 20),
+                margin: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: Text(
+                          widget.dog!.dogName!,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        )),
+                    Container(
+                      margin: EdgeInsets.only(right: 8),
+                      child: Text(
+                        widget.dog!.description!,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        maxLines: 2,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.only(top: 16, bottom: 30),
+                        child: Text(
+                          "Almost ${widget.dog!.age!} years",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        )),
+                  ],
+                )),
+          ),
+        ),
       ),
     );
   }

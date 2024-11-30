@@ -17,15 +17,12 @@ void main() {
     await initializeDependencies();
     Bloc.observer = SimpleBlocObserver();
 
-    // Empezamos el widget
     await tester.pumpWidget(
       const MyApp(),
     );
 
-    // Espera a que todos los frames se procesen
     await tester.pumpAndSettle();
 
-    // Verifica que el widget se haya construido
     expect(find.byType(MaterialApp), findsOneWidget);
     expect(find.byType(DogsHome), findsOneWidget);
   });

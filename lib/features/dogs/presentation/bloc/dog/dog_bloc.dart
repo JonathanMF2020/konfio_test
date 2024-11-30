@@ -12,8 +12,7 @@ class DogBloc extends Bloc<DogEvent, DogState> {
   final GetDogsUseCase getDogsUseCase;
 
   Future<void> onGetDogs(GetDogs event, Emitter<DogState> emit) async {
-    final dataState =
-        await getDogsUseCase(); // _getArticleUseCase.call() is equal to _getArticleUseCase() in Dart (Object.call() == Object())
+    final dataState = await getDogsUseCase();
     if (dataState is DataSuccess) {
       emit(DogDone(dataState.data!));
     }
